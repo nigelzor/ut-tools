@@ -8,16 +8,28 @@ var connect = require('connect');
 var parseurl = require('parseurl');
 var morgan = require('morgan');
 var serveStatic = require('serve-static');
+var fs = require('fs');
 
 var port = process.env.PORT || 3000;
 var host = process.env.HOSTNAME || (localIp() + ':' + port);
-var dir = process.env.DIR || path.join(process.env.HOME, 'Programs/UnrealTournament/drive_c/UnrealTournament');
+var dir = process.env.UT_HOME || path.join(process.env.HOME, 'Programs/UnrealTournament/drive_c/UnrealTournament');
 
-var config = "[IpDrv.HTTPDownload]\n" +
-	"RedirectToURL=http://" + host + "/files/\n" +
-	"ProxyServerHost=\n" +
-	"ProxyServerPort=3128\n" +
-	"UseCompression=False\n";
+try {
+	fs.statSync(dir);
+} catch (e) {
+	console.log(e + '\nSet UT_HOME to your Unreal Tournament folder');
+	process.exit(1);
+}
+
+try {
+	var ini = path.join(dir, 'System', 'UnrealTournament.ini');
+	var content = fs.readFileSync(ini, 'utf8')
+		.replace(/^RedirectToURL=.*$/m, "RedirectToURL=http://" + host + "/files/")
+		.replace(/^UseCompression=True$/m, "UseCompression=False");
+	fs.writeFileSync(ini, content);
+} catch (e) {
+	console.log('Failed to update UnrealTournament.ini\n' + e);
+}
 
 function localIp() {
 	var ifaces = os.networkInterfaces();
@@ -71,7 +83,13 @@ function send(res, msg) {
 app.use(function (req, res) {
 	if (req.url === '/') {
 		var msg = "<h2>System/UnrealTournament.ini</h2>\n" +
-			"<pre>" + config + "</pre>\n";
+			"<pre>" +
+			"[IpDrv.HTTPDownload]\n" +
+			"RedirectToURL=http://" + host + "/files/\n" +
+			"ProxyServerHost=\n" +
+			"ProxyServerPort=3128\n" +
+			"UseCompression=False\n" +
+			"</pre>\n";
 		send(res, msg);
 	} else {
 		nope(res, 404);
