@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-'use strict'
+'use strict';
 
 var os = require('os');
 var path = require('path');
@@ -24,8 +24,8 @@ try {
 try {
 	var ini = path.join(dir, 'System', 'UnrealTournament.ini');
 	var content = fs.readFileSync(ini, 'utf8')
-		.replace(/^RedirectToURL=.*$/m, "RedirectToURL=http://" + host + "/files/")
-		.replace(/^UseCompression=True$/m, "UseCompression=False");
+		.replace(/^RedirectToURL=.*$/m, 'RedirectToURL=http://' + host + '/files/')
+		.replace(/^UseCompression=True$/m, 'UseCompression=False');
 	fs.writeFileSync(ini, content);
 } catch (e) {
 	console.log('Failed to update UnrealTournament.ini\n' + e);
@@ -51,10 +51,10 @@ app.use(morgan('combined'));
 
 var mapping = {
 	'.unr': serveStatic(path.join(dir, 'Maps')),
-	'.u':   serveStatic(path.join(dir, 'System')),
+	'.u': serveStatic(path.join(dir, 'System')),
 	'.uax': serveStatic(path.join(dir, 'Sounds')),
 	'.utx': serveStatic(path.join(dir, 'Textures')),
-	'.umx': serveStatic(path.join(dir, 'Music')),
+	'.umx': serveStatic(path.join(dir, 'Music'))
 };
 
 app.use('/files', function (req, res, next) {
@@ -69,7 +69,7 @@ app.use('/files', function (req, res, next) {
 });
 
 function nope(res, code) {
-	var msg = "<h2>" + code + " " + http.STATUS_CODES[code] + "</h2>\n";
+	var msg = '<h2>' + code + ' ' + http.STATUS_CODES[code] + '</h2>\n';
 	res.statusCode = code;
 	send(res, msg);
 }
@@ -82,21 +82,20 @@ function send(res, msg) {
 
 app.use(function (req, res) {
 	if (req.url === '/') {
-		var msg = "<h2>System/UnrealTournament.ini</h2>\n" +
-			"<pre>" +
-			"[IpDrv.HTTPDownload]\n" +
-			"RedirectToURL=http://" + host + "/files/\n" +
-			"ProxyServerHost=\n" +
-			"ProxyServerPort=3128\n" +
-			"UseCompression=False\n" +
-			"</pre>\n";
+		var msg = '<h2>System/UnrealTournament.ini</h2>\n' +
+			'<pre>' +
+			'[IpDrv.HTTPDownload]\n' +
+			'RedirectToURL=http://' + host + '/files/\n' +
+			'ProxyServerHost=\n' +
+			'ProxyServerPort=3128\n' +
+			'UseCompression=False\n' +
+			'</pre>\n';
 		send(res, msg);
 	} else {
 		nope(res, 404);
 	}
 });
 
-
-var server = app.listen(port);
+app.listen(port);
 
 console.log('listening on port', port);

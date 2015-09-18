@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 DOWNLOAD="$HOME/Downloads/Unreal Tournament v451wx2 (Intel).zip"
 TARGET="$HOME/Programs/UnrealTournament"
 
@@ -22,7 +24,7 @@ while [[ $# > 0 ]]; do
 done
 
 mkdir -p "$TARGET"
-WINEPREFIX="$TARGET" WINEARCH=win32 wineboot
+WINEPREFIX="$TARGET" WINEARCH=win32 wineboot --init
 cd "$TARGET/drive_c/"
 
 unzip "$DOWNLOAD" "Unreal Tournament (Intel)/Unreal Tournament OS X.app/Contents/Resources/drive_c/UnrealTournament/*"
