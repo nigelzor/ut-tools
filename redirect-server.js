@@ -6,6 +6,7 @@ var path = require('path');
 var http = require('http');
 var connect = require('connect');
 var parseurl = require('parseurl');
+var morgan = require('morgan');
 var serveStatic = require('serve-static');
 
 var port = process.env.PORT || 3000;
@@ -34,9 +35,11 @@ function localIp() {
 
 var app = connect();
 
+app.use(morgan('combined'));
+
 var mapping = {
 	'.unr': serveStatic(path.join(dir, 'Maps')),
-	'.u': serveStatic(path.join(dir, 'System')),
+	'.u':   serveStatic(path.join(dir, 'System')),
 	'.uax': serveStatic(path.join(dir, 'Sounds')),
 	'.utx': serveStatic(path.join(dir, 'Textures')),
 	'.umx': serveStatic(path.join(dir, 'Music')),
