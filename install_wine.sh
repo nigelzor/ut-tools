@@ -23,7 +23,6 @@ while [[ $# > 0 ]]; do
 	shift
 done
 
-mkdir -p "$TARGET"
 WINEPREFIX="$TARGET" WINEARCH=win32 wineboot --init
 cd "$TARGET/drive_c/"
 
