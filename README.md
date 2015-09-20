@@ -11,7 +11,7 @@ Use the registry fixer from http://www.pseudorandom.co.uk/2001/paradox/utmodsfaq
 Get a prebuilt Wineskin from http://unrealosx.webs.com/downloads.htm
 
 #### Linux
-winetricks + Steam + the replacement OpenGL renderer works, or use `install_wine.sh` and the OS X download above.
+winetricks + Steam + the replacement OpenGL renderer works, or use `install_wine.sh` and either the OS X download above or original CDs.
 
 The native Linux client is now very old, difficult to install, and doesn't get the benefits of a newer renderer.
 
