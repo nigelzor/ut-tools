@@ -27,6 +27,10 @@ function do_install {
 				echo "copy      $ARCHIVE/${FILE#$WORK/}"
 				cp "$FILE" "$TARGET/Sounds"
 				;;
+			u|int|ini)
+				echo "copy      $ARCHIVE/${FILE#$WORK/}"
+				cp "$FILE" "$TARGET/System"
+				;;
 			umod)
 				echo "$(tput setaf 6)umod$(tput sgr0)      $ARCHIVE/${FILE#$WORK/}"
 				umod -b "$TARGET" -i "$FILE"
