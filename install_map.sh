@@ -5,42 +5,41 @@ if [ -d "$TARGET/drive_c/UnrealTournament" ]; then
 	TARGET="$TARGET/drive_c/UnrealTournament"
 fi
 
-UNZIP="unzip -q -u"
-
 function do_install {
-	zipinfo -1 "$1" | while read line; do
-		case "${line##*.}" in
+	local ARCHIVE=$(basename $1)
+	local WORK=$(mktemp -d umod.XXXXXX)
+	unzip -q "$1" -d "$WORK"
+	find "$WORK" -type f | while read FILE; do
+		case "${FILE##*.}" in
 			unr)
-				echo "unzip     $1/$line"
-				$UNZIP "$1" "$line" -d "$TARGET/Maps"
+				echo "copy      $ARCHIVE/${FILE#$WORK/}"
+				cp "$FILE" "$TARGET/Maps"
 				;;
 			utx)
-				echo "unzip     $1/$line"
-				$UNZIP "$1" "$line" -d "$TARGET/Textures"
+				echo "copy      $ARCHIVE/${FILE#$WORK/}"
+				cp "$FILE" "$TARGET/Textures"
 				;;
 			umx)
-				echo "unzip     $1/$line"
-				$UNZIP "$1" "$line" -d "$TARGET/Music"
+				echo "copy      $ARCHIVE/${FILE#$WORK/}"
+				cp "$FILE" "$TARGET/Music"
 				;;
 			uax)
-				echo "unzip     $1/$line"
-				$UNZIP "$1" "$line" -d "$TARGET/Sounds"
+				echo "copy      $ARCHIVE/${FILE#$WORK/}"
+				cp "$FILE" "$TARGET/Sounds"
 				;;
 			umod)
-				echo "$(tput setaf 6)umod$(tput sgr0)      $1/$line"
-				WORK=$(mktemp -d umod.XXXXXX)
-				$UNZIP "$1" "$line" -d "$WORK"
-				umod -b "$TARGET" -i "$WORK/$line"
-				rm -rf "$WORK"
+				echo "$(tput setaf 6)umod$(tput sgr0)      $ARCHIVE/${FILE#$WORK/}"
+				umod -b "$TARGET" -i "$FILE"
 				;;
-			txt|htm|html|jpg|*/)
-				echo "$(tput setaf 8)skipping$(tput sgr0)  $1/$line"
+			txt|htm|html|jpg)
+				echo "$(tput setaf 8)skipping$(tput sgr0)  $ARCHIVE/${FILE#$WORK/}"
 				;;
 			*)
-				echo "$(tput setaf 1)unhandled$(tput sgr0) $1/$line"
+				echo "$(tput setaf 1)unhandled$(tput sgr0) $ARCHIVE/${FILE#$WORK/}"
 				;;
 		esac
 	done
+	rm -rf "$WORK"
 }
 
 while [[ $# > 0 ]]; do
